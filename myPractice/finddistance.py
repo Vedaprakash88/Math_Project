@@ -148,7 +148,6 @@ def find_distance(test_line_array, sl, x_values, y_inter, inp_angle, intersectio
             distance = round(math.sqrt(((t1 - xi) ** 2) + ((t2 - yi) ** 2)), 2)
             # print(distance)
             dict_out[distance] = test_line_array[itr]
-        break
 
     # comparing the distances
     if intersection:
