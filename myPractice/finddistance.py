@@ -1,7 +1,3 @@
-""" This code is for review of the Advanced Programming (Python) Exercise 5 code for David Linner
-This code has been developed by Veda Prakash Chintha and Ashish Pangaonkar combined due to the complexities of the
-problem and extremely tight timescales. Thank you for your understanding"""
-
 # importing libraries
 import math
 import sys
