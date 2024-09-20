@@ -1,0 +1,71 @@
+import requests
+from bs4 import BeautifulSoup
+
+cookies = {
+    '_sharedID': 'ee4cb3a9-0b89-4b90-a0a3-0fecbeb7d044',
+    'snconsent': 'eyJwdWJsaXNoZXIiOjAsInZlbmRvciI6MywiZ2xDb25zZW50cyI6IiIsImN2Q29uc2VudHMiOnt9fQ.AlIAKwAuADcAPQBGAFMAWQBdAGwAdQB6AHwAhwCPAJAAkwCVAJ8\
+    AwADEAMoA0wDkAOYA7wEDAQoBHgEjATcBPgFAAUIBQwFHAW8BcwGBAYoBjQGXAZ0BnwGoAa4BtAG9AcUB5gHrAe4B7wIKAgsCHAImAi8CMAI4Aj4CQAJIAksCTwLhAyIDIwM0AzUDRwNgA4MD\
+    iAOaA6MDqgPTA9UD2QPrBAMEBwQQBBYEGwQdBCsERARHBEkESwRTBG8EdwR9BIAEigSOBKIEpAS1BL8EygTLBM4E5AT0BPYE_AUEBQoFFQUbBSAFQQVMBVQFXwV7BYcFiAWNBY8FoAWpBa8F1\
+    wXoBewF9QYEBgwGEwYWBiIGKQYrBi8GMAY3BkMGUAZmBnMGdQZ7BoMGjQaOBpIGoQajBqcGsAa0BrkGvQbEBtEG1gblBvYG-gcIBxIHIQcjBygHLgcwBzIHMwc1B0MHSgdOB1YHWAdhB2sHfQe\
+    JB5YHmAeqB6sHrAevB7AHsQe6B8EHwwfTB9gH6wfzB_cH_wgECAgIEAgUCBgIGggoCCoINwg7CD0IQwhMCFIIVQhXCFkIXAhjCGYIbAh2CIEIhwiKCJ0IpQioCKsIrAiuCLEIugjNCOcI6gj0C\
+    QEJBQkICQwJEgkVCRgJGwkeCR8JIAkhCScJMgk1CTYJNwlCCUgJSQlTCWAJYwllCWcJawluCXAJcgl5CYgJjwmdCaEJpAmoCa0JsQm0CbYJuAm9CcIJxQnOCdUJ3gnfCeQJ5wnuCfgKAwoECgc\
+    KCAoJCgsKDAoPChEKFwoYCiQKLAotCjAKMQoyCjQKNgo9CkQKRQpJCkwKUgpTClUKVgpaClsKXApgCmEKYgpkCmUKbQpuCnUKeQp8Cn8KggqHCooKmQqaCqkKswrPCtAK0grUCuAK4wrnCugK7\
+    grxCvUK_Ar9CwALAQsFCwYLCwsOCw8LEgsWCxcLHAseCyELIgskCyYLLAsuCy8LMQszCzULOQs6CzsLPAs-C0ALQQtCC0MLRAtGC0cLSAtJC0sLTQtOC08LUQtSC1QLVQtcC10LZAtlC2YLZwto\
+    C2oLawtvC3ELcgtzC3wLfQuDC4ULhguMC44LkQuTC5QLlQuWC5gLnQufC6MLpAulC6cLqQuqC6sLsguzC7ULtwu4C7oLuwu9C8ALwQvCC8QLyAvJC8oLywvRC9QL2gveC-ML6AvsC-0L7wvyC_ML\
+    9wv6C_wL_gwBDAIMAwwEDAUMEQwSDBUMFgwXDBkMGwwcDCIMJQwoDC0MLww2DDcMOAw6DD8MQAxJDE4MTwxSDFMMWwxfDGQMZQxuDG8McAxxDHMMdAx1DHYMegx8DIkMigyLDI4MjwyRDJMMlgy\
+    XDJkMmgybDJwMngyfDKIMowykDKUMpgyoDKwMrQyyDLMMtQy5DLwMxgzIDNEM2AzaDNwM3QzgDOMM5AzqDOsM7QzyDPMM9Az2DPwNAA0CDQMNyw6TDvcQIxGzEhcSexLfFG8bExxDHpce-yLjJg\
+    Mn9ymHKk8rFy0LMh81QDWjN503_D1zQb9CI1LxWfdkg2VLZa9oz2xTbLdtf3A7cJ9zv3uPfxM',
+    'euconsent-v2': 'CQEXhXAQEXhXADlBWAENBFFsAP_gAEPgAAYgKatV_G__bXlv-X736ftkeY1f9_h77sQxBhfJs-4FzLvW_JwX32EzNE36tqYKmRIAu3bBIQNtGJjUTVChaogVrzDsak2co\
+    TtKJ-BkiHMRe2dYCF5vmwtj-QKZ5vr_91d52R_t7dr-3dzyz5Vnv3a9_-b1WJidK5-tH_v_bROb-_I-9_x-_4v8_N_rE2_eT1t_tevt739-8tv___f_9___________3_-_4KagEmGhUQBlgSE\
+    hBoGEECAFQVhARQIAAAASBogIATBgU7AwCXWEiAEAKAAYIAQAAoyABAAABAAhEAEABQIAAIBAoAAwAIBgIACBgABABYCAQAAgOgQpgQQKBYAJGZEQpgQhAJBAS2VCCQBAgrhCEWeABAIiYKAA\
+    AAAArAAEBYLA4kkBKhIIEuINoAACABAIIAKhBJyYAAgDNlqDwZNoytMA0fMEiGmAZAAA',
+    '_sharedID_cst': '7CyCLBMstg%3D%3D',
+    '_lr_env_src_ats': 'false',
+    '_sharedID_last': 'Thu%2C%2019%20Sep%202024%2019%3A00%3A50%20GMT',
+    '_lr_retry_request': 'true',
+}
+
+headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    'Accept-Language': 'en-US,en;q=0.9,en-IN;q=0.8,te;q=0.7,de-DE;q=0.6,de;q=0.5',
+    'Connection': 'keep-alive',
+    'DNT': '1',
+    'Referer': 'https://www.dict.cc/?s=handy',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-User': '?1',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0',
+    'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Microsoft Edge";v="128"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+}
+
+params = {
+    's': 'Tafel',
+}
+
+response = requests.get('https://www.dict.cc/', params=params, cookies=cookies, headers=headers)
+
+soup = BeautifulSoup(response.content, 'html.parser')
+
+main_content = soup.find('div', id='maincontent')
+
+if main_content:
+    # Find the tr with the specific title
+    tr_element = main_content.find('tr', title='article sg | article pl')
+
+    if tr_element:
+        # Find the <a> tag within the tr element
+        a_tag = tr_element.find('a')
+
+        if a_tag:
+            # Extract and print the text
+            print(a_tag.get_text())
+        else:
+            print('No <a> tag found within the specified <tr> element.')
+    else:
+        print('No <tr> element found with the specified title.')
+else:
+    print('No div found with id "main content".')
